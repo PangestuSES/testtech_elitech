@@ -48,7 +48,7 @@ Before you begin, make sure you have Laravel installed on your machine.
     DB_USERNAME=username_db
     DB_PASSWORD=password_db
     ```
-6. Set up the database (choose one)
+6. Set up the database
 
     The SQL dump file is located in the `database` folder (`database/elitech_test.sql`). You can import it with:
     ```bash
