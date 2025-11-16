@@ -50,14 +50,6 @@ Before you begin, make sure you have Laravel installed on your machine.
     ```
 6. Set up the database (choose one)
 
-    **Option 1: Using migrations & seeders**
-
-    ```bash
-    php artisan migrate --seed
-
-    ```
-
-    **Option 2: Using sql dump**\
     The SQL dump file is located in the `database` folder (`database/elitech_test.sql`). You can import it with:
     ```bash
     mysql -u your_username -p elitech_test < database/elitech_test.sql
