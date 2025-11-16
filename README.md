@@ -31,23 +31,22 @@ Before you begin, make sure you have Laravel installed on your machine.
     ```bash
     cd testech-elitech
     ```
-3. Setup the `.env` file by duplicating `.env.example`
-    ```bash
-    cp .env.example .env
-    php artisan key:generate
-    ```
-4. Update the .env file with your database credentials and other necessary configurations.
-
-    ```bash
-    DB_DATABASE=nama_db
-    DB_USERNAME=username_db
-    DB_PASSWORD=password_db
-    ```
-
 5. Install vue and depedencies
     ```bash
     composer install
     npm install
+    ```
+4. Setup the `.env` file by duplicating `.env.example`
+    ```bash
+    cp .env.example .env
+    php artisan key:generate
+    ```
+5. Update the .env file with your database credentials and other necessary configurations.
+
+    ```bash
+    DB_DATABASE=elitech_test
+    DB_USERNAME=username_db
+    DB_PASSWORD=password_db
     ```
 6. Set up the database (choose one)
 
@@ -55,8 +54,7 @@ Before you begin, make sure you have Laravel installed on your machine.
 
     ```bash
     php artisan migrate --seed
-    # or, if you want to reset everything:
-    # php artisan migrate:fresh --seed
+
     ```
 
     **Option 2: Using sql dump**\
