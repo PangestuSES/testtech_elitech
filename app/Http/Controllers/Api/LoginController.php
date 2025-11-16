@@ -22,7 +22,7 @@ class LoginController extends Controller
                 return response([
                     'success'   => false,
                     'message' => ['These credentials do not match our records.']
-                ], 404);
+                ], 201);
             }
         
             $token = $user->createToken('ApiToken')->plainTextToken;

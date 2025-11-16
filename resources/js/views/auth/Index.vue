@@ -25,9 +25,6 @@
                                     <label>PASSWORD</label>
                                     <input type="password" class="form-control" v-model="user.password"
                                         placeholder="Masukkan Password">
-                                    <div v-if="validation.password" class="mt-2 alert alert-danger">
-                                        Masukkan Password
-                                    </div>
                                 </div>
 
                                 <button type="submit" class="btn btn-primary">LOGIN</button>
@@ -41,72 +38,32 @@
 </template>
 
 <script>
-    import axios from 'axios'
+import axios from 'axios'
+import Swal from 'sweetalert2'
 
-    export default {
-        name: 'Login',
+export default {
+    name: 'Login',
 
-        data() {
-            return {
-                //state loggedIn with localStorage
-                loggedIn: localStorage.getItem('loggedIn'),
-                //state token
-                token: localStorage.getItem('token'),
-                //state user
-                user: [],
-                //state validation
-                validation: [],
-                //state login failed
-                loginFailed: null
-            }
-        },
-        methods: {
+    data() {
+        return {
+            //state loggedIn with localStorage
+            loggedIn: localStorage.getItem('loggedIn'),
+            //state token
+            token: localStorage.getItem('token'),
+            //state user
+            user: [],
+            //state validation
+            validation: [],
+            //state login failed
+            loginFailed: null
+        }
+    },
+    methods: {
+        login() {
+            this.validation = {}
 
-            login() {
-                if (this.user.email && this.user.password) {
-                    axios.get('http://localhost:8000/sanctum/csrf-cookie')
-                        .then(response => {
-
-                            //debug cookie
-                            console.log(response)
-
-                            axios.post('http://localhost:8000/api/login', {
-                                email: this.user.email,
-                                password: this.user.password
-                            }).then(res => {
-
-                                //debug user login
-                                console.log(res)
-
-                                if (res.data.success) {
-
-                                    //set localStorage
-                                    localStorage.setItem("loggedIn", "true")
-
-                                    //set localStorage Token
-                                    localStorage.setItem("token", res.data.token)
-
-                                    //change state
-                                    this.loggedIn = true
-
-                                    //redirect dashboard
-                                    return this.$router.push({ name: 'dashboard' })
-
-                                } else {
-
-                                    //set state login failed
-                                    this.loginFailed = true
-
-                                }
-
-                            }).catch(error => {
-                                console.log(error)
-                            })
-
-                        })
-                }
-
-                this.validation = []
+            // cek input kosong dulu
+            if (!this.user.email || !this.user.password) {
 
                 if (!this.user.email) {
                     this.validation.email = true
@@ -116,14 +73,55 @@
                     this.validation.password = true
                 }
 
-            }
-        },
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Login gagal',
+                    text: 'Email dan password wajib diisi.',
+                })
 
-        //check user already logged in
-        mounted() {
-            if (this.loggedIn) {
-                return this.$router.push({ name: 'dashboard' })
+                return
             }
+
+            axios.get('http://localhost:8000/sanctum/csrf-cookie')
+                .then(response => {
+
+                    axios.post('http://localhost:8000/api/login', {
+                        email: this.user.email,
+                        password: this.user.password
+                    }).then(res => {
+                        console.log(res)
+                        if (res.data.success) {
+                            localStorage.setItem("loggedIn", "true")
+                            localStorage.setItem("token", res.data.token)
+                            this.loggedIn = true
+
+                            return this.$router.push({ name: 'dashboard' })
+                        } else {
+                            // email / password salah
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Login gagal',
+                                text: 'Email atau password tidak sesuai.',
+                            })
+                        }
+
+                    }).catch(error => {
+                        console.log(error)
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Server error',
+                            text: 'Terjadi kesalahan pada server.',
+                        })
+                    })
+                })
+        }
+    },
+
+    //check user already logged in
+    mounted() {
+        if (this.loggedIn) {
+            return this.$router.push({ name: 'dashboard' })
         }
     }
+}
 </script>
